@@ -1,0 +1,13 @@
+{
+    "name": "ecocash-login",
+    "version": "1.0.0",
+    "description": "EcoCash login page with credential capture",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT"
+  }
